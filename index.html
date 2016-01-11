@@ -3,20 +3,67 @@
 	<head>
 		<title>fXD</title>
 		<meta charset="utf-8">
-		<style type="text/css"></style>
 	</head>
 	<body>
 		
 		<main>
+			Test
 			<div class="avatar-wrapper">
-				<img class="avatar" src="" alt="Avatar">
+				<img class="avatar" id="js-avatar" src="" alt="Avatar">
 			</div>
 			<div class="phrase-wrapper">
-				<span class="phrase"></span>
+				<span class="phrase" id="js-phrase"></span>
 			</div>
 		</main>
 
 	</body>
-	<script src="http://vk.com/js/api/xd_connection.js?2" type="text/javascript"></script>
-	<script src="script.js"></script>
+	<script src="https://vk.com/js/api/xd_connection.js?2" type="text/javascript"></script>
+	<script>
+		var friends = [];
+		var phrases = [
+			'superior message', 'appreciated ability', 'recorded parent', 'trial behalf',
+			'mean component', 'refer visible', 'asking repair', 'democratic think', 'hundred continuation',
+			'expanding chaos', 'acceptable biology', 'accessible electric', 'frequent function', 'cutting absolute',
+			'accepting code', 'nicest cardboard', 'touching escape', 'regular theory', 'promised sequence',
+			'catching magic', 'entitled sentence', 'national read', 'bit autumn', 'partial return'
+		];
+		var phrasesLength = phrases.length;
+		var count = 0;
+		var $avatar = document.getElementById('js-avatar');
+		var $phrase = document.getElementById('js-phrase');
+
+		VK.init(function() {
+			VK.api('friends.get', { fields: 'photo_100' }, function(obj) {
+				console.log(obj);
+				if (obj.response) {
+					friends = obj.response;
+
+					var length = friends.length;
+					for (var i = 0; i < length; i++) {
+						friends[i]['phrase'] = randomPhrase();
+					}
+
+					var event = document.body.addEventListener('click', show, true);
+					// document.body.dispatchEvent(event);
+					show();
+				}
+			});
+		});	
+
+		function show() {
+			var friend = friends[count];
+
+			$phrase.innerHTML = '...';
+			$avatar.src = friend.photo_100;
+			$avatar.onload = function() {
+				$phrase.innerHTML = friend.phrase;
+			}
+
+			count++;
+		}
+
+		function randomPhrase() {
+			return phrases[~~(Math.random() * phrasesLength)];
+		}
+	</script>
 </html>
